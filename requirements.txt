@@ -1,0 +1,22 @@
+# --- Core & Audio I/O ---
+numpy>=1.24.0
+scipy>=1.10.0
+sounddevice>=0.4.6
+webrtcvad-wheels>=2.0.10
+
+# --- Speech to Text (STT) & Text to Speech (TTS) ---
+faster-whisper>=1.0.0
+pyttsx3>=2.90
+
+# --- Biometrics & Deep Learning ---
+torch>=2.0.0
+torchaudio>=2.0.0
+
+# --- Intelligence & LLM ---
+google-genai>=0.1.1
+requests>=2.31.0
+
+# --- Utilities & Configuration ---
+python-dotenv>=1.0.0
+pydantic-settings>=2.0.0
+flask>=3.0.0
