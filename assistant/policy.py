@@ -48,15 +48,22 @@ class PolicyEngine:
                     should_exit=should_exit,
                 )
 
-        # 3. Route to LLM for conversational query
-        self.conversation_manager.add_user_message(
-            user_text, speaker_id=speaker_name, emotion=emotion
-        )
-        context = self.conversation_manager.get_context_list()
-
-        # Augment prompt with user context
-        augmented_prompt = f"[Speaker: {speaker_name}, Emotional state: {emotion}]\n{user_text}"
-        response_text = self.llm_client.generate_response(augmented_prompt, context)
+        # 3. Route to Remote Sensing XAI Engine (FR-1 through FR-5)
+        try:
+            from intelligence.remote_sensing import rs_engine
+            self.conversation_manager.add_user_message(
+                user_text, speaker_id=speaker_name, emotion=emotion
+            )
+            context = self.conversation_manager.get_context_list()
+            xai_res = rs_engine.process_query(
+                user_text, speaker_id=speaker_name, conversation_history=context
+            )
+            response_text = xai_res.spoken_response
+        except Exception as e:
+            logger.warning(f"Remote sensing engine fallback: {e}")
+            context = self.conversation_manager.get_context_list()
+            augmented_prompt = f"[Speaker: {speaker_name}, Emotional state: {emotion}]\n{user_text}"
+            response_text = self.llm_client.generate_response(augmented_prompt, context)
 
         self.conversation_manager.add_assistant_message(response_text)
 

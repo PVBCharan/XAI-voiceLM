@@ -15,7 +15,11 @@ class LLMClient:
         system_instruction: str = settings.intelligence.system_prompt,
     ):
         self.api_key = api_key
-        self.model_name = model_name
+        # Ensure model is a valid Gemini model
+        if not model_name or "3." in model_name:
+            self.model_name = "gemini-2.5-flash"
+        else:
+            self.model_name = model_name
         self.system_instruction = system_instruction
         self._backend = None  # 'genai_new', 'google_generativeai', or 'offline'
         self._client = None
@@ -80,26 +84,44 @@ class LLMClient:
 
         # 1. google-genai
         if self._backend == "genai_new" and self._client is not None:
-            try:
-                response = self._client.models.generate_content(
-                    model=self.model_name,
-                    contents=full_prompt,
-                    config={
-                        "system_instruction": self.system_instruction,
-                        "temperature": settings.intelligence.temperature,
-                    },
-                )
-                return response.text.strip()
-            except Exception as e:
-                logger.error(f"google-genai generation error: {e}")
+            models_to_try = [self.model_name, "gemini-2.5-flash", "gemini-1.5-flash"]
+            for m in dict.fromkeys(models_to_try):
+                try:
+                    from google.genai import types
+                    cfg = types.GenerateContentConfig(
+                        system_instruction=self.system_instruction,
+                        temperature=settings.intelligence.temperature,
+                    )
+                    # Use chats.create for clean interactive multi-turn messaging
+                    if hasattr(self._client, "chats"):
+                        chat = self._client.chats.create(model=m, config=cfg)
+                        response = chat.send_message(full_prompt)
+                    else:
+                        response = self._client.models.generate_content(
+                            model=m,
+                            contents=full_prompt,
+                            config=cfg,
+                        )
+                    if response and response.text:
+                        return response.text.strip()
+                except Exception as e:
+                    logger.debug(f"google-genai attempt with {m} failed: {e}")
 
         # 2. google-generativeai
         elif self._backend == "google_generativeai" and self._client is not None:
-            try:
-                response = self._client.generate_content(full_prompt)
-                return response.text.strip()
-            except Exception as e:
-                logger.error(f"google-generativeai generation error: {e}")
+            models_to_try = [self.model_name, "gemini-1.5-flash", "gemini-1.5-pro"]
+            for m in dict.fromkeys(models_to_try):
+                try:
+                    import google.generativeai as genai_legacy
+                    model_obj = genai_legacy.GenerativeModel(
+                        model_name=m,
+                        system_instruction=self.system_instruction,
+                    )
+                    response = model_obj.generate_content(full_prompt)
+                    if response and response.text:
+                        return response.text.strip()
+                except Exception as e:
+                    logger.debug(f"google-generativeai attempt with {m} failed: {e}")
 
         # Offline fallback response
         return f"I heard your request: '{prompt}'. To enable live AI intelligence, add your GEMINI_API_KEY to .env."

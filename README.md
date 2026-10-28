@@ -28,11 +28,33 @@
 
 <br/>
 
-**A production-grade, modular voice assistant built in Python — featuring wake word detection, speaker biometrics, emotion recognition, local intent routing, Google Gemini conversational AI, text-to-speech, and persistent memory.**
+**Explainable AI Interactive Voice Assistant for Remote Sensing & Physics (PoC Prototype)**
+Featuring two-way voice interaction, speaker biometrics with topic memory, physics invariant verification against adversarial sources, governing equations & citations, and real-time neural attention graphing.
 
-[🚀 Quick Start](#-quick-start) · [✨ Features](#-features) · [🏗️ Architecture](#%EF%B8%8F-system-architecture) · [📸 Screenshots](#-screenshots) · [🛠️ Configuration](#%EF%B8%8F-configuration) · [🤝 Contributing](#-contributing)
+[🚀 Launch Web Prototype](#-launching-the-remote-sensing-xai-prototype) · [✨ PRD Feature Compliance](#-prd-feature-compliance) · [🏗️ Architecture](#%EF%B8%8F-system-architecture) · [🛠️ Configuration](#%EF%B8%8F-configuration)
 
 </div>
+
+---
+
+## 🛰️ Launching the Remote Sensing XAI Prototype
+
+Run the local web prototype with:
+```bash
+python web_demo.py
+```
+Open **[http://127.0.0.1:5000](http://127.0.0.1:5000)** in your browser.
+
+### 🌟 Implemented PRD Features & UI Design:
+1. **Preferred UI Design**:
+   - **Screen 1 (Home Dashboard)**: Warm ember / burnt orange gradient, dynamic island, Roobinium profile header with notifications and drawer menu, bold headline *"What are we building today?"*, quick suggestion cards with star icons (✦), and bottom glassmorphic input card with model pill and glowing microphone button.
+   - **Screen 2 (Active Voice Mode)**: "✕ Close chat" button, 3D luminous glowing golden/amber orb with audio-reactive pulsing, *"Aira is listening...."* status indicator, large clean transcription text, and bottom voice controls.
+   - **Explainability & Neural Links Drawer (XAI Panel)**: Pull-up drawer displaying governing physics equations, ground citations, confidence gauge, and interactive neural attention graph.
+2. **FR-1 (Two-Way Voice Interaction)**: Browser microphone speech capture, Web Speech API audio synthesis, and real-time query transcription.
+3. **FR-2 (Voice Recognition & Session Memory)**: Biometric speaker identification, cosine similarity score matching against enrolled analyst `Roobinium`, and automatic session topic resumption (*"SAR Phase Shift & Interferometry"*).
+4. **FR-3 (Explainability & Grounding)**: Precise mathematical equations ($\text{NDVI} = \frac{\text{NIR} - \text{RED}}{\text{NIR} + \text{RED}}$, $\Delta\phi = \frac{4\pi}{\lambda}\Delta R$, $I_{\text{scat}} \propto \lambda^{-4}$, $\sigma^0$), grounding confidence score, and NASA/IEEE citations.
+5. **FR-4 (Neural Path & Weight Visualization)**: Interactive Canvas/SVG force-directed neural graph depicting active token connections and attention weight distribution.
+6. **FR-5 (Adversarial / Corrupted Source Detection)**: Physics Invariant Validator actively detects contradictions with physical laws (e.g., testing *"Does radar require sunlight?"* triggers a contradiction flag, physics explanation, and confidence penalty).
 
 ---
 
